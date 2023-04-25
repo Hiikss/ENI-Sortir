@@ -1,0 +1,54 @@
+:root {
+    --color1: #f0f0f0;
+    --color2: #a1cca5;
+    --color3: #8fb996;
+    --color4: #709775;
+    --color5: #415d43;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+#status {
+    font-size: 1.1rem;
+    align-self: flex-end;
+}
+
+#status div {
+    margin-top: 15px;
+}
+
+#filters {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 250px;
+    background-color: #8fb996;
+}
+
+#trips-list {
+    width: 100%;
+    height: 350px;
+    background-color: #415d43;
+}
+
+#create-trip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 60px;
+    background-color: var(--color4);
+    border-radius: 50px;
+    font-weight: 600;
+    margin-top: 20px;
+    color: white;
+    text-decoration: none;
+}
+
+#create-trip:hover {
+    background-color: var(--color3);
+}
