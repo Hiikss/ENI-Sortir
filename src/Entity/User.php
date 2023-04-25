@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -43,6 +45,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $actif = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
+
+    #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Trip::class)]
+    private Collection $organizedTrips;
+
+    #[ORM\ManyToMany(targetEntity: Trip::class, mappedBy: 'registeredUsers')]
+    private Collection $registeredTrips;
+
+    public function __construct()
+    {
+        $this->organizedTrips = new ArrayCollection();
+        $this->registeredTrips = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -192,4 +210,74 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Trip>
+     */
+    public function getOrganizedTrips(): Collection
+    {
+        return $this->organizedTrips;
+    }
+
+    public function addOrganizedTrip(Trip $organizedTrip): self
+    {
+        if (!$this->organizedTrips->contains($organizedTrip)) {
+            $this->organizedTrips->add($organizedTrip);
+            $organizedTrip->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganizedTrip(Trip $organizedTrip): self
+    {
+        if ($this->organizedTrips->removeElement($organizedTrip)) {
+            // set the owning side to null (unless already changed)
+            if ($organizedTrip->getOrganizer() === $this) {
+                $organizedTrip->setOrganizer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Trip>
+     */
+    public function getRegisteredTrips(): Collection
+    {
+        return $this->registeredTrips;
+    }
+
+    public function addRegisteredTrip(Trip $registeredTrip): self
+    {
+        if (!$this->registeredTrips->contains($registeredTrip)) {
+            $this->registeredTrips->add($registeredTrip);
+            $registeredTrip->addRegisteredUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegisteredTrip(Trip $registeredTrip): self
+    {
+        if ($this->registeredTrips->removeElement($registeredTrip)) {
+            $registeredTrip->removeRegisteredUser($this);
+        }
+
+        return $this;
+    }
+
 }
