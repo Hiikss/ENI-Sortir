@@ -28,6 +28,9 @@ class Trip
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $limitEntryDate = null;
 
+    #[ORM\Column]
+    private ?int $maxRegistrationsNb = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $tripInfos = null;
 
@@ -45,6 +48,10 @@ class Trip
     #[ORM\ManyToOne(inversedBy: 'trips')]
     #[ORM\JoinColumn(nullable: false)]
     private ?State $state = null;
+
+    #[ORM\ManyToOne(inversedBy: 'trips')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Place $place = null;
 
     public function __construct()
     {
@@ -172,6 +179,30 @@ class Trip
     public function setState(?State $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getMaxRegistrationsNb(): ?int
+    {
+        return $this->maxRegistrationsNb;
+    }
+
+    public function setMaxRegistrationsNb(int $maxRegistrationsNb): self
+    {
+        $this->maxRegistrationsNb = $maxRegistrationsNb;
+
+        return $this;
+    }
+
+    public function getPlace(): ?Place
+    {
+        return $this->place;
+    }
+
+    public function setPlace(?Place $place): self
+    {
+        $this->place = $place;
 
         return $this;
     }
