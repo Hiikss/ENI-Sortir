@@ -2,8 +2,12 @@
 
 {% block title %}Modifier le Profil{% endblock %}
 
+{% block extrastyles %}
+    <link rel="stylesheet" href="{{ asset('css/modifier_profil.css') }}">
+{% endblock %}
+
 {% block body %}
-    <div>
+    <div class="form">
         {{ form(profilForm) }}
     </div>
 {% endblock %}

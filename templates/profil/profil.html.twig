@@ -2,13 +2,28 @@
 
 {% block title %}Profil{% endblock %}
 
-{% block body %}
-<h1>{{ user.pseudo }}</h1>
-    <div>Nom: {{ user.name}}</div>
-    <div>Prénom: {{ user.firstname}}</div>
-    <div>Email: {{ user.email}}</div>
-    <div>Téléphone: {{ user.telephone}}</div>
+{% block extrastyles %}
+    <link rel="stylesheet" href="{{ asset('css/profil.css') }}">
+{% endblock %}
 
-    <a href="{{ path('app_profil_modify') }}" class="bouton-modifier">Modifier</a>
-    <a href="{{ path('app_profil_modify_password') }}" class="bouton-modifier">Modifier mot de passe</a>
+{% block body %}
+    <div class="profil">
+        <h1>{{ user.pseudo }}</h1>
+        <div class="value"> {{ user.name}}</div>
+        <div class="value"> {{ user.firstname}}</div>
+        <div class="value"> {{ user.email}}</div>
+        <div class="value"> {{ user.telephone}}</div>
+
+        <div class="btn">
+            <a href="{{ path('app_profil_modify') }}">Modifier</a>
+        </div>
+        <div class="btn">
+            <a href="{{ path('app_profil_modify_password') }}">Modifier mot de passe</a>
+        </div>
+
+
+    </div>
+
+
+
 {% endblock %}

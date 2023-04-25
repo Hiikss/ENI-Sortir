@@ -23,7 +23,7 @@ class ProfilFormType extends AbstractType
             ->add('pseudo', type: TextType::class, options: [
                 'required' => true,
             ])
-            ->add('name', type: TextType::class, options: [
+            ->add('lastname', type: TextType::class, options: [
                 'required' => true,
             ])
             ->add('firstname', type: TextType::class, options: [
