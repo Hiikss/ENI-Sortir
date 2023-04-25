@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block extrastyles %} <link rel="stylesheet" href="css/accueil.css"> {% endblock %}
+
+{% block body %}
+<section id="status">
+    <div>Date du jour : {{ "now"|date("d/m/Y") }}</div>
+    <div>Participant : {{ app.user.firstname }} {{ app.user.name|first }}.</div>
+</section>
+
+<section id="filters">
+    <div></div>
+    <div></div>
+    <div></div>
+</section>
+
+<section id="trips-list">
+    <div></div>
+</section>
+
+<section>
+    <a id="create-trip" href="#">Créer une sortie</a>
+</section>
+{% endblock %}
