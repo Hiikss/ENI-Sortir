@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<h1>{{ user.pseudo }}</h1>
+    <div>{{ user.name}}</div>
+    <div>{{ user.firstname}}</div>
+    <div>{{ user.email}}</div>
+    <div>{{ user.telephone}}</div>
+
+    <a href="{{ path('profil_modifier') }}" class="bouton-modifier">Modifier</a>
+{% endblock %}
