@@ -4,10 +4,11 @@
 
 {% block body %}
 <h1>{{ user.pseudo }}</h1>
-    <div>{{ user.name}}</div>
-    <div>{{ user.firstname}}</div>
-    <div>{{ user.email}}</div>
-    <div>{{ user.telephone}}</div>
+    <div>Nom: {{ user.name}}</div>
+    <div>Prénom: {{ user.firstname}}</div>
+    <div>Email: {{ user.email}}</div>
+    <div>Téléphone: {{ user.telephone}}</div>
 
-    <a href="{{ path('profil_modifier') }}" class="bouton-modifier">Modifier</a>
+    <a href="{{ path('app_profil_modify') }}" class="bouton-modifier">Modifier</a>
+    <a href="{{ path('app_profil_modify_password') }}" class="bouton-modifier">Modifier mot de passe</a>
 {% endblock %}
