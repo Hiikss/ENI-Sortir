@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -30,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
@@ -44,8 +46,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $actif = null;
 
-    #[ORM\Column(type: 'string', length: 100)] //Mdp oublié
-    private $resetToken;
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
+
+    #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Trip::class)]
+    private Collection $organizedTrips;
+
+    #[ORM\ManyToMany(targetEntity: Trip::class, mappedBy: 'registeredUsers')]
+    private Collection $registeredTrips;
+
+    public function __construct()
+    {
+        $this->organizedTrips = new ArrayCollection();
+        $this->registeredTrips = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -138,12 +153,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getName(): ?string
     {
-        return $this->name;
+        return $this->lastname;
     }
 
-    public function setName(string $name): self
+    public function setName(string $lastname): self
     {
-        $this->name = $name;
+        $this->lastname = $lastname;
 
         return $this;
     }
@@ -196,21 +211,73 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getResetToken() :?string
+    public function getCampus(): ?Campus
     {
-        return $this->resetToken;
+        return $this->campus;
     }
 
-    /**
-     * @param mixed $resetToken
-     */
-    public function setResetToken(?string $resetToken): self
+    public function setCampus(?Campus $campus): self
     {
-        $this->resetToken = $resetToken;
+        $this->campus = $campus;
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Trip>
+     */
+    public function getOrganizedTrips(): Collection
+    {
+        return $this->organizedTrips;
+    }
+
+    public function addOrganizedTrip(Trip $organizedTrip): self
+    {
+        if (!$this->organizedTrips->contains($organizedTrip)) {
+            $this->organizedTrips->add($organizedTrip);
+            $organizedTrip->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganizedTrip(Trip $organizedTrip): self
+    {
+        if ($this->organizedTrips->removeElement($organizedTrip)) {
+            // set the owning side to null (unless already changed)
+            if ($organizedTrip->getOrganizer() === $this) {
+                $organizedTrip->setOrganizer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Trip>
+     */
+    public function getRegisteredTrips(): Collection
+    {
+        return $this->registeredTrips;
+    }
+
+    public function addRegisteredTrip(Trip $registeredTrip): self
+    {
+        if (!$this->registeredTrips->contains($registeredTrip)) {
+            $this->registeredTrips->add($registeredTrip);
+            $registeredTrip->addRegisteredUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegisteredTrip(Trip $registeredTrip): self
+    {
+        if ($this->registeredTrips->removeElement($registeredTrip)) {
+            $registeredTrip->removeRegisteredUser($this);
+        }
+
+        return $this;
+    }
+    
 }
